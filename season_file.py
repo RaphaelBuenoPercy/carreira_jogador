@@ -39,13 +39,19 @@ class Season:
         self.schedule = schedule
 
     def play_next_round(self, player=None, ui=None):
-        round_matches = self.schedule[self.current_round]
         print(f"\n📅 Rodada {self.current_round + 1}")
+
+        round_matches = self.schedule[self.current_round]
 
         for team_a, team_b in round_matches:
             print(f"{team_a.name} vs {team_b.name}")
 
-            if player and (player.team_id == team_a.id or player.team_id == team_b.id):
+            # 👉 verifica se é jogo do player
+            is_player_match = player and (
+                player.team_id == team_a.id or player.team_id == team_b.id
+            )
+
+            if is_player_match:
                 player_team = team_a if player.team_id == team_a.id else team_b
                 opponent = team_b if player_team == team_a else team_a
 
@@ -55,30 +61,8 @@ class Season:
                 match = Match(team_a, team_b)
                 match.simulate()
 
+            # 🔥 ISSO TEM QUE RODAR PRA TODOS
             self.league.register_result(match, team_a, team_b)
-
-        print(f"{team_a.name} vs {team_b.name}")
-
-        if self.current_round >= len(self.schedule):
-            return None
-
-        for team in self.league.teams:
-            team.recover_players()
-
-        # 👉 se o jogador está em campo
-        if player and (player.team_id == team_a.id or player.team_id == team_b.id):
-
-            player_team = team_a if player.team_id == team_a.id else team_b
-            opponent = team_b if player_team == team_a else team_a
-
-            match = InteractiveMatch(player, player_team, opponent, ui)
-            match.play()
-
-        else:
-            match = Match(team_a, team_b)
-            match.simulate()
-
-        self.league.register_result(match, team_a, team_b)
 
         self.current_round += 1
 

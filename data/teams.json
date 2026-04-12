@@ -1,0 +1,30 @@
+[
+  {
+    "id": 0,
+    "name": "Flamengo",
+    "league_id": 1,
+    "reputation": 85,
+    "style": "offensive"
+  },
+  {
+    "id": 1,
+    "name": "Palmeiras",
+    "league_id": 1,
+    "reputation": 84,
+    "style": "balanced"
+  },
+  {
+    "id": 2,
+    "name": "Corinthians",
+    "league_id": 1,
+    "reputation": 80,
+    "style": "defensive"
+  },
+  {
+    "id": 3,
+    "name": "Santos",
+    "league_id": 1,
+    "reputation": 78,
+    "style": "counter"
+  }
+]

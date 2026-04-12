@@ -8,10 +8,10 @@ def simulate_moment(match):
     prob = strength_a / (strength_a + strength_b)
 
     if random.random() < prob:
-        if random.random() < 0.25:
-            match.score_player_team += 1
+        if random.random() < 0.08:
+            match.score_a += 1
             match.events.append("Gol do seu time")
     else:
-        if random.random() < 0.25:
-            match.score_opponent += 1
+        if random.random() < 0.08:
+            match.score_b += 1
             match.events.append("Gol adversário")

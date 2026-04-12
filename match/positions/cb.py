@@ -67,7 +67,7 @@ def _cb_aerial_duel(self):
         self.ui.show("🧱 Corte perfeito!")
     else:
         self.ui.show("⚠️ Perdeu no alto!")
-        self.score_opponent += 1
+        self.score_b += 1
 
 
 def _cb_interception(self):

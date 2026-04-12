@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Pedro",
+    "position": "ST",
+    "team_id": 0,
+    "attributes": {
+      "finishing": 85,
+      "passing": 70,
+      "dribbling": 75,
+      "defense": 40,
+      "physical": 80,
+      "pace": 70
+    }
+  },
+  {
+    "id": 2,
+    "name": "Arrascaeta",
+    "position": "CAM",
+    "team_id": 0,
+    "attributes": {
+      "finishing": 75,
+      "passing": 88,
+      "dribbling": 85,
+      "defense": 50,
+      "physical": 60,
+      "pace": 70
+    }
+  }
+]

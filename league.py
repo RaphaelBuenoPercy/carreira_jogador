@@ -1,3 +1,14 @@
+from data_loader import load_teams_and_players
+
+
+def create_league():
+    teams = load_teams_and_players()
+
+    league = League(data={"id": 1, "name": "Liga"}, teams=teams)
+
+    return league
+
+
 class League:
     def __init__(self, data, teams):
         self.id = data["id"]

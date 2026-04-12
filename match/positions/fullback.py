@@ -107,4 +107,4 @@ def _fb_transition(self):
         self.ui.show("🏃‍♂️ Você recompõe bem!")
     else:
         self.ui.show("⚠️ Chegou atrasado!")
-        self.score_opponent += 1
+        self.score_b += 1

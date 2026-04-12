@@ -6,8 +6,8 @@ def finalization(match, long_shot=False):
 
     base = finishing * (0.7 if long_shot else 1.0)
 
-    if random.randint(0, 100) < base:
-        match.score_player_team += 1
+    if random.randint(0, 100) < base * 0.25:
+        match.goal_player_team()
         match.ui.show("⚽ GOOOOOL!")
         match.player_stats["goals"] += 1
     else:
@@ -22,7 +22,7 @@ def assist_attempt(match):
 
         # chance de gol depois da assistência
         if random.randint(0, 100) < 50:
-            match.score_player_team += 1
+            match.goal_player_team()
             match.ui.show("⚽ Gol do companheiro!")
             match.player_stats["assists"] += 1
         else:

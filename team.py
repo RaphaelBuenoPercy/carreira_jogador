@@ -1,5 +1,31 @@
 import random
 
+FORMATIONS = {
+    "4-4-2": ["GK", "RB", "CB", "CB", "LB", "RM", "CM", "CM", "LM", "ST", "ST"],
+    "4-3-3": ["GK", "RB", "CB", "CB", "LB", "CDM", "CM", "CM", "RW", "LW", "ST"],
+    "4-2-3-1": ["GK", "RB", "CB", "CB", "LB", "CDM", "CDM", "CAM", "RW", "LW", "ST"],
+    "4-3-1-2": ["GK", "RB", "CB", "CB", "LB", "RM", "CDM", "LM", "CAM", "ST", "ST"],
+    "3-4-3": ["GK", "CB", "CB", "CB", "RWB", "CM", "CM", "LWB", "RW", "LW", "ST"],
+    "3-5-2": ["GK", "CB", "CB", "CB", "RWB", "CM", "CM", "LWB", "CAM", "ST", "ST"],
+    "3-2-4-1": ["GK", "CB", "CB", "CB", "RM", "CDM", "CDM", "CAM", "CAM", "LM", "ST"],
+}
+
+POSITION_COMPATIBILITY = {
+    "CB": ["CB"],
+    "LB": ["LB", "LWB"],
+    "RB": ["RB", "RWB"],
+    "CDM": ["CDM", "CM"],
+    "CM": ["CM", "CDM", "CAM"],
+    "CAM": ["CAM", "CM"],
+    "LW": ["LW", "LM"],
+    "RW": ["RW", "RM"],
+    "LM": ["LM", "LW"],
+    "RM": ["RM", "RW"],
+    "ST": ["ST"],
+    "GK": ["GK"],
+}
+
+
 class Team:
     def __init__(self, data, players):
         self.id = data["id"]
@@ -17,19 +43,36 @@ class Team:
         self.players = players
 
     def get_starting_xi(self):
-        # pode evoluir pra IA depois
-        return sorted(
-            self.players,
-            key=lambda p: (p.get_match_rating(), p.fitness),
-            reverse=True
-        )[:11]
+        formation = FORMATIONS.get(self.formation, FORMATIONS["4-4-2"])
+
+        xi = []
+        used_players = set()
+
+        for pos in formation:
+            # filtra jogadores da posição
+            candidates = [
+                p
+                for p in self.players
+                if p.position in POSITION_COMPATIBILITY.get(pos, [pos])
+                and p.id not in used_players
+            ]
+
+            # fallback: se não tiver jogador da posição
+            if not candidates:
+                candidates = [p for p in self.players if p.id not in used_players]
+
+            # escolhe o melhor
+            best = max(candidates, key=lambda p: (p.get_match_rating(), p.fitness))
+
+            xi.append(best)
+            used_players.add(best.id)
+
+        return xi
 
     def get_bench(self):
-        return sorted(
-            self.players,
-            key=lambda p: p.get_match_rating(),
-            reverse=True
-        )[11:18]
+        return sorted(self.players, key=lambda p: p.get_match_rating(), reverse=True)[
+            11:18
+        ]
 
     def get_team_strength(self):
         xi = self.get_starting_xi()
@@ -37,11 +80,7 @@ class Team:
         base = sum(p.get_match_rating() for p in xi) / len(xi)
 
         tactical_bonus = self._get_tactical_bonus()
-        condition_bonus = (
-            self.form * 0.1 +
-            self.morale * 0.05 +
-            self.chemistry * 0.05
-        )
+        condition_bonus = self.form * 0.1 + self.morale * 0.05 + self.chemistry * 0.05
 
         return base + tactical_bonus + condition_bonus
 
