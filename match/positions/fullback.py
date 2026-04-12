@@ -1,0 +1,106 @@
+import random
+
+# -------------------------
+# 🛡️ LATERAL
+# -------------------------
+
+
+def _fullback_moment(self):
+    self.ui.show("🏃‍♂️ Você avança pela lateral!")
+
+    situation = random.choice(["apoio", "defesa", "cruzamento", "transicao"])
+
+    if situation == "apoio":
+        self._fb_support()
+    elif situation == "defesa":
+        self._fb_defense()
+    elif situation == "cruzamento":
+        self._fb_cross()
+    else:
+        self._fb_transition()
+
+
+def _fb_support(self):
+    choice = self.ui.choice(
+        "Você tem espaço na lateral:",
+        ["Avançar em velocidade", "Tocar e passar", "Segurar"],
+    )
+
+    pace = self.player.attributes["pace"]
+    dribble = self.player.attributes["dribbling"]
+
+    if choice == 1:
+        if random.randint(0, 100) < pace:
+            self.ui.show("🚀 Você dispara pela lateral!")
+            self._fb_cross()
+        else:
+            self.ui.show("❌ Perdeu no pique.")
+    elif choice == 2:
+        if random.randint(0, 100) < dribble:
+            self.ui.show("🔁 Boa tabela!")
+            self._assist_attempt()
+        else:
+            self.ui.show("❌ Passe errado.")
+    else:
+        self.ui.show("⏳ Você segura a jogada.")
+
+
+def _fb_defense(self):
+    choice = self.ui.choice(
+        "Ponta adversário parte pra cima:",
+        ["Dar bote", "Conter", "Fazer falta tática"],
+    )
+
+    defense = self.player.attributes["defense"]
+
+    if choice == 1:
+        chance = defense + 5
+        foul_risk = 0.3
+    elif choice == 2:
+        self.ui.show("👣 Você segura o jogador.")
+        return
+    else:
+        self._foul_event()
+        return
+
+    if random.randint(0, 100) < chance:
+        self.ui.show("🛡️ Desarme lateral perfeito!")
+    else:
+        if random.random() < foul_risk:
+            self._foul_event()
+        else:
+            self.ui.show("❌ Ele passou!")
+
+
+def _fb_cross(self):
+    choice = self.ui.choice(
+        "Você vai cruzar:",
+        ["Cruzamento alto", "Cruzamento rasteiro", "Cortar pra dentro"],
+    )
+
+    passing = self.player.attributes["passing"]
+
+    if choice == 3:
+        self.ui.show("↪️ Você corta pra dentro!")
+        self._dribble()
+        return
+
+    modifier = 5 if choice == 1 else 10
+
+    if random.randint(0, 100) < passing + modifier:
+        self.ui.show("🎯 Cruzamento perfeito!")
+        self._assist_attempt()
+    else:
+        self.ui.show("❌ Cruzamento ruim.")
+
+
+def _fb_transition(self):
+    self.ui.show("⚡ Transição rápida!")
+
+    pace = self.player.attributes["pace"]
+
+    if random.randint(0, 100) < pace:
+        self.ui.show("🏃‍♂️ Você recompõe bem!")
+    else:
+        self.ui.show("⚠️ Chegou atrasado!")
+        self.score_opponent += 1
