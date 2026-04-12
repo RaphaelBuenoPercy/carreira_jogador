@@ -3,6 +3,7 @@ from soupsieve import match
 from match.stats_file import init_stats, calculate_rating
 from . import ai
 from .positions import gk, cb, fullback, cdm, cm, cam, winger, striker
+from .events import foul, injury, card
 
 
 class InteractiveMatch:

@@ -1,22 +1,28 @@
 import random
-
+from ..actions import assist_attempt, finalization
 
 # -------------------------
 # 🔥 ATACANTE
 # -------------------------
+
+
+def handle(match):
+    _striker_moment(match)
+
+
 def _striker_moment(self):
     self.ui.show("🎯 Você está na área!")
 
     situation = random.choice(["finalizacao", "pivo", "corrida", "reacao"])
 
     if situation == "finalizacao":
-        self._st_finish()
+        _st_finish(self)
     elif situation == "pivo":
-        self._st_hold_up()
+        _st_hold_up(self)
     elif situation == "corrida":
-        self._st_run()
+        _st_run(self)
     else:
-        self._st_reaction()
+        _st_reaction(self)
 
 
 def _st_finish(self):
@@ -24,22 +30,7 @@ def _st_finish(self):
         "Bola na área!", ["Chute de primeira", "Dominar e bater", "Cabeceio"]
     )
 
-    finishing = self.player.attributes["finishing"]
-    physical = self.player.attributes["physical"]
-
-    if choice == 1:
-        chance = finishing + 5
-    elif choice == 2:
-        chance = finishing
-    else:
-        chance = physical + 5
-
-    if random.randint(0, 100) < chance:
-        self.score_player_team += 1
-        self.ui.show("⚽ GOL DE CENTROAVANTE!")
-        self.player.record_match(8, goals=1)
-    else:
-        self.ui.show("❌ Perdeu chance clara!")
+    finalization(self)
 
 
 def _st_hold_up(self):
@@ -52,11 +43,11 @@ def _st_hold_up(self):
 
     if choice == 1:
         self.ui.show("🧱 Segurou bem a bola!")
-        self._assist_attempt()
+        assist_attempt(self)
     elif choice == 2:
         if random.randint(0, 100) < physical:
             self.ui.show("🔥 Girou bonito!")
-            self._st_finish()
+            _st_finish(self)
         else:
             self.ui.show("❌ Desarmado.")
     else:
@@ -68,17 +59,10 @@ def _st_run(self):
 
     if random.randint(0, 100) < pace:
         self.ui.show("🏃 Você ganha da defesa!")
-        self._st_finish()
+        _st_finish(self)
     else:
         self.ui.show("❌ Zagueiro ganhou.")
 
 
 def _st_reaction(self):
-    finishing = self.player.attributes["finishing"]
-
-    if random.randint(0, 100) < finishing + 10:
-        self.score_player_team += 1
-        self.ui.show("⚡ Gol oportunista!")
-        self.player.record_match(8, goals=1)
-    else:
-        self.ui.show("❌ Não aproveitou o rebote.")
+    finalization(self)

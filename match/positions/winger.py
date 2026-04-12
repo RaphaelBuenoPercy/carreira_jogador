@@ -1,8 +1,13 @@
 import random
+from ..actions import assist_attempt, finalization
 
 # -------------------------
 # 🔥 PONTA
 # -------------------------
+
+
+def handle(match):
+    _winger_moment(match)
 
 
 def _winger_moment(self):
@@ -11,13 +16,13 @@ def _winger_moment(self):
     situation = random.choice(["1v1", "correr", "cruzar", "cortar"])
 
     if situation == "1v1":
-        self._winger_1v1()
+        _winger_1v1(self)
     elif situation == "correr":
-        self._winger_run()
+        _winger_run(self)
     elif situation == "cruzar":
-        self._winger_cross()
+        _winger_cross(self)
     else:
-        self._winger_cut_inside()
+        _winger_cut_inside(self)
 
 
 def _winger_1v1(self):
@@ -38,7 +43,7 @@ def _winger_1v1(self):
 
     if random.randint(0, 100) < chance:
         self.ui.show("🔥 Você deixou o marcador pra trás!")
-        self._winger_final_decision()
+        _winger_final_decision(self)
 
     else:
         if random.random() < 0.3:
@@ -52,7 +57,7 @@ def _winger_run(self):
 
     if random.randint(0, 100) < pace:
         self.ui.show("🚀 Você dispara pela ponta!")
-        self._winger_final_decision()
+        _winger_final_decision(self)
     else:
         self.ui.show("❌ Não ganhou na corrida.")
 
@@ -64,7 +69,7 @@ def _winger_cross(self):
 
     if random.randint(0, 100) < passing + 5:
         self.ui.show("🎯 Cruzamento perigoso!")
-        self._assist_attempt()
+        assist_attempt(self)
     else:
         self.ui.show("❌ Cruzamento ruim.")
 
@@ -74,7 +79,7 @@ def _winger_cut_inside(self):
 
     if random.randint(0, 100) < dribble:
         self.ui.show("↪️ Cortou pra dentro!")
-        self._finalization()
+        finalization(self)
     else:
         self.ui.show("❌ Travado pela defesa.")
 
@@ -85,8 +90,8 @@ def _winger_final_decision(self):
     )
 
     if choice == 1:
-        self._finalization()
+        finalization(self)
     elif choice == 2:
-        self._assist_attempt()
+        assist_attempt(self)
     else:
-        self._winger_cross()
+        _winger_cross(self)

@@ -1,8 +1,12 @@
 import random
+from ..actions import assist_attempt, finalization
+
 
 # -------------------------
 # 🛡️ MEIO CENTRAL
 # -------------------------
+def handle(match):
+    _cm_moment(match)
 
 
 def _cm_moment(self):
@@ -11,13 +15,13 @@ def _cm_moment(self):
     situation = random.choice(["controle", "criacao", "pressao", "finalizacao"])
 
     if situation == "controle":
-        self._cm_control()
+        _cm_control(self)
     elif situation == "criacao":
-        self._cm_creation()
+        _cm_creation(self)
     elif situation == "pressao":
-        self._cm_press()
+        _cm_press(self)
     else:
-        self._cm_shot()
+        _cm_shot(self)
 
 
 def _cm_control(self):
@@ -32,7 +36,7 @@ def _cm_control(self):
     elif choice == 2:
         if random.randint(0, 100) < passing:
             self.ui.show("🎯 Virada excelente!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Erro na virada.")
     else:
@@ -44,7 +48,7 @@ def _cm_creation(self):
 
     if random.randint(0, 100) < passing:
         self.ui.show("🎯 Você quebra linhas!")
-        self._assist_attempt()
+        assist_attempt(self)
     else:
         self.ui.show("❌ Tentativa falhou.")
 
@@ -54,17 +58,10 @@ def _cm_press(self):
 
     if random.randint(0, 100) < stamina:
         self.ui.show("🔥 Você pressiona e recupera!")
-        self._cm_control()
+        _cm_control(self)
     else:
         self.ui.show("❌ Pressão falhou.")
 
 
 def _cm_shot(self):
-    finishing = self.player.attributes["finishing"]
-
-    if random.randint(0, 100) < finishing - 10:
-        self.score_player_team += 1
-        self.ui.show("⚽ Gol de fora da área!")
-        self.player.record_match(7, goals=1)
-    else:
-        self.ui.show("❌ Chute sem perigo.")
+    finalization(self)

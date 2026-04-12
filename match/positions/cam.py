@@ -1,9 +1,15 @@
 import random
-
+from ..actions import assist_attempt, finalization
 
 # -------------------------
 # ⚙️ MEIA AVANÇADO
 # -------------------------
+
+
+def handle(match):
+    _cam_moment(match)
+
+
 def _cam_moment(self):
     self.ui.show("🎯 Você recebe entre as linhas!")
 
@@ -12,13 +18,13 @@ def _cam_moment(self):
     )
 
     if situation == "criacao":
-        self._cam_creation()
+        _cam_creation(self)
     elif situation == "finalizacao":
-        self._cam_shot()
+        _cam_shot(self)
     elif situation == "infiltracao":
-        self._cam_run()
+        _cam_run(self)
     else:
-        self._cam_quick_decision()
+        _cam_quick_decision(self)
 
 
 def _cam_creation(self):
@@ -38,20 +44,13 @@ def _cam_creation(self):
 
     if random.randint(0, 100) < chance:
         self.ui.show("🎯 Passe perfeito!")
-        self._assist_attempt()
+        assist_attempt(self)
     else:
         self.ui.show("❌ Passe não funcionou.")
 
 
 def _cam_shot(self):
-    finishing = self.player.attributes["finishing"]
-
-    if random.randint(0, 100) < finishing:
-        self.score_player_team += 1
-        self.ui.show("⚽ GOLAÇO!")
-        self.player.record_match(8, goals=1)
-    else:
-        self.ui.show("❌ Chute pra fora!")
+    finalization(self)
 
 
 def _cam_run(self):
@@ -59,7 +58,7 @@ def _cam_run(self):
 
     if random.randint(0, 100) < dribble:
         self.ui.show("🔥 Você invade a área!")
-        self._cam_shot()
+        finalization(self)
     else:
         if random.random() < 0.3:
             self._foul_event(in_box=True)
@@ -73,8 +72,8 @@ def _cam_quick_decision(self):
     )
 
     if choice == 1:
-        self._cam_shot()
+        finalization(self)
     elif choice == 2:
-        self._cam_creation()
+        _cam_creation(self)
     else:
         self.ui.show("⏳ Você segura a posse.")

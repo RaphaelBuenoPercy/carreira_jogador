@@ -1,23 +1,27 @@
 import random
+from ..actions import assist_attempt, finalization
+
 
 # -------------------------
 # 🛡️ LATERAL
 # -------------------------
+def handle(match):
+    _fb_moment(match)
 
 
-def _fullback_moment(self):
+def _fb_moment(self):
     self.ui.show("🏃‍♂️ Você avança pela lateral!")
 
     situation = random.choice(["apoio", "defesa", "cruzamento", "transicao"])
 
     if situation == "apoio":
-        self._fb_support()
+        _fb_support(self)
     elif situation == "defesa":
-        self._fb_defense()
+        _fb_defense(self)
     elif situation == "cruzamento":
-        self._fb_cross()
+        _fb_cross(self)
     else:
-        self._fb_transition()
+        _fb_transition(self)
 
 
 def _fb_support(self):
@@ -32,13 +36,13 @@ def _fb_support(self):
     if choice == 1:
         if random.randint(0, 100) < pace:
             self.ui.show("🚀 Você dispara pela lateral!")
-            self._fb_cross()
+            _fb_cross(self)
         else:
             self.ui.show("❌ Perdeu no pique.")
     elif choice == 2:
         if random.randint(0, 100) < dribble:
             self.ui.show("🔁 Boa tabela!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Passe errado.")
     else:
@@ -89,7 +93,7 @@ def _fb_cross(self):
 
     if random.randint(0, 100) < passing + modifier:
         self.ui.show("🎯 Cruzamento perfeito!")
-        self._assist_attempt()
+        assist_attempt(self)
     else:
         self.ui.show("❌ Cruzamento ruim.")
 

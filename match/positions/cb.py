@@ -1,22 +1,27 @@
 import random
+from ..actions import assist_attempt, finalization
+
+
+def handle(match):
+    _cb_moment(match)
 
 
 # -------------------------
 # 🛡️ ZAGUEIRO
 # -------------------------
-def _centerback_moment(self):
+def _cb_moment(self):
     self.ui.show("🛡️ Você está na defesa!")
 
     situation = random.choice(["marcacao", "cruzamento", "antecipacao", "saida_bola"])
 
     if situation == "marcacao":
-        self._cb_marking()
+        _cb_marking(self)
     elif situation == "cruzamento":
-        self._cb_aerial_duel()
+        _cb_aerial_duel(self)
     elif situation == "antecipacao":
-        self._cb_interception()
+        _cb_interception(self)
     else:
-        self._cb_build_up()
+        _cb_build_up(self)
 
 
 def _cb_marking(self):
@@ -86,7 +91,7 @@ def _cb_build_up(self):
     elif choice == 2:
         if random.randint(0, 100) < passing:
             self.ui.show("🎯 Que passe!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Erro na saída!")
     else:

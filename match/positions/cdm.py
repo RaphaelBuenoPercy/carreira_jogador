@@ -1,8 +1,12 @@
 import random
+from ..actions import assist_attempt, finalization
+
 
 # -------------------------
 # 🛡️ VOLANTE
 # -------------------------
+def handle(match):
+    _cdm_moment(match)
 
 
 def _cdm_moment(self):
@@ -11,13 +15,13 @@ def _cdm_moment(self):
     situation = random.choice(["marcacao", "interceptacao", "transicao", "pressao"])
 
     if situation == "marcacao":
-        self._cdm_marking()
+        _cdm_marking(self)
     elif situation == "interceptacao":
-        self._cdm_interception()
+        _cdm_interception(self)
     elif situation == "transicao":
-        self._cdm_transition()
+        _cdm_transition(self)
     else:
-        self._cdm_press()
+        _cdm_press(self)
 
 
 def _cdm_marking(self):
@@ -53,7 +57,7 @@ def _cdm_interception(self):
 
     if random.randint(0, 100) < iq:
         self.ui.show("🧠 Você lê o jogo e intercepta!")
-        self._cdm_transition()
+        _cdm_transition(self)
     else:
         self.ui.show("⚠️ Não conseguiu cortar.")
 
@@ -70,13 +74,13 @@ def _cdm_transition(self):
     elif choice == 2:
         if random.randint(0, 100) < passing:
             self.ui.show("🎯 Virada de jogo perfeita!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Erro na virada.")
     else:
         if random.randint(0, 100) < passing - 5:
             self.ui.show("🚀 Lançamento perigoso!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Bola perdida.")
 
@@ -86,6 +90,6 @@ def _cdm_press(self):
 
     if random.randint(0, 100) < stamina:
         self.ui.show("🔥 Pressão alta! Você rouba a bola!")
-        self._cdm_transition()
+        _cdm_transition(self)
     else:
         self.ui.show("❌ Pressão falhou.")

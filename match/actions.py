@@ -9,6 +9,24 @@ def finalization(match, long_shot=False):
     if random.randint(0, 100) < base:
         match.score_player_team += 1
         match.ui.show("⚽ GOOOOOL!")
-        match.player.record_match(8, goals=1)
+        match.player_stats["goals"] += 1
     else:
         match.ui.show("❌ Finalização ruim!")
+
+
+def assist_attempt(match):
+    passing = match.player.attributes["passing"]
+
+    if random.randint(0, 100) < passing:
+        match.ui.show("🅰️ Passe decisivo!")
+
+        # chance de gol depois da assistência
+        if random.randint(0, 100) < 50:
+            match.score_player_team += 1
+            match.ui.show("⚽ Gol do companheiro!")
+            match.player_stats["assists"] += 1
+        else:
+            match.ui.show("❌ Companheiro desperdiçou!")
+    else:
+        match.ui.show("❌ Passe interceptado!")
+        match.player_stats["possession_lost"] += 1

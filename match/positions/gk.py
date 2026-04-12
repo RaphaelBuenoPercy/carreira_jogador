@@ -1,23 +1,28 @@
 import random
+from ..actions import assist_attempt, finalization
 
 # -------------------------
 # 🛡️ GOLEIRO
 # -------------------------
 
 
-def _goalkeeper_moment(self):
+def handle(match):
+    _gk_moment(match)
+
+
+def _gk_moment(self):
     self.ui.show("🧤 Situação de perigo! Você é o goleiro!")
 
     situation = random.choice(["finalizacao", "cruzamento", "1v1", "reposicao"])
 
     if situation == "finalizacao":
-        self._gk_shot_save()
+        _gk_shot_save(self)
     elif situation == "cruzamento":
-        self._gk_cross()
+        _gk_cross(self)
     elif situation == "1v1":
-        self._gk_one_on_one()
+        _gk_one_on_one(self)
     else:
-        self._gk_distribution()
+        _gk_distribution(self)
 
 
 def _gk_shot_save(self):
@@ -90,7 +95,7 @@ def _gk_distribution(self):
         chance = passing
         if random.randint(0, 100) < chance:
             self.ui.show("🎯 Lançamento perfeito!")
-            self._assist_attempt()
+            assist_attempt(self)
         else:
             self.ui.show("❌ Entregou a bola!")
     elif choice == 2:
