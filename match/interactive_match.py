@@ -1,7 +1,6 @@
-from random import random
-
+import random
 from soupsieve import match
-from stats import init_stats, calculate_rating
+from match.stats_file import init_stats, calculate_rating
 from . import ai
 from .positions import gk, cb, fullback, cdm, cm, cam, winger, striker
 
@@ -15,8 +14,8 @@ class InteractiveMatch:
         self.opponent_team = opponent_team
         self.ui = ui
 
-        self.score_player_team = 0
-        self.score_opponent = 0
+        self.score_a = 0
+        self.score_b = 0
 
         self.minute = 0
         self.events = []
@@ -68,6 +67,9 @@ class InteractiveMatch:
     # 🏁 FINAL
     # -------------------------
     def _final_whistle(self):
+        self.score_a = self.score_player_team
+        self.score_b = self.score_opponent
+
         self.ui.show("\n🏁 Fim de jogo!")
         self.ui.show(
             f"{self.player_team.name} {self.score_player_team} x {self.score_opponent} {self.opponent_team.name}"
@@ -100,6 +102,13 @@ class InteractiveMatch:
         }
 
         self.player.record_match_detailed(match_data)
+
+    def get_result(self):
+        if self.score_a > self.score_b:
+            return "A"
+        elif self.score_b > self.score_a:
+            return "B"
+        return "draw"
 
     def _is_player_involved(self):
         chance = 0.35 + (self.player.get_match_rating() / 220)

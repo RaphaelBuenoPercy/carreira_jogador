@@ -11,7 +11,7 @@ class League:
                 "draws": 0,
                 "losses": 0,
                 "goals_for": 0,
-                "goals_against": 0
+                "goals_against": 0,
             }
             for team in teams
         }
@@ -45,9 +45,48 @@ class League:
     def get_standings(self):
         return sorted(
             self.table.items(),
-            key=lambda x: (
-                x[1]["points"],
-                x[1]["goals_for"] - x[1]["goals_against"]
-            ),
-            reverse=True
+            key=lambda x: (x[1]["points"], x[1]["goals_for"] - x[1]["goals_against"]),
+            reverse=True,
         )
+
+
+def create_league():
+    from league import League
+    from team import Team
+    from player.player_model import Player
+    import random
+
+    teams = []
+
+    # cria 4 times simples (pode aumentar depois)
+    for t_id in range(4):
+        players = []
+
+        for p_id in range(18):
+            player = Player(
+                {
+                    "id": t_id * 100 + p_id,
+                    "name": f"Player_{t_id}_{p_id}",
+                    "position": random.choice(["ST", "CM", "CB", "LW", "RW"]),
+                    "team_id": t_id,
+                    "attributes": {
+                        "finishing": random.randint(50, 90),
+                        "passing": random.randint(50, 90),
+                        "dribbling": random.randint(50, 90),
+                        "defense": random.randint(50, 90),
+                        "physical": random.randint(50, 90),
+                        "pace": random.randint(50, 90),
+                    },
+                }
+            )
+            players.append(player)
+
+        team = Team(
+            data={"id": t_id, "name": f"Time {t_id}", "league_id": 1}, players=players
+        )
+
+        teams.append(team)
+
+    league = League(data={"id": 1, "name": "Liga Teste"}, teams=teams)
+
+    return league
