@@ -473,7 +473,7 @@ class InteractiveMatch:
         else:
             team = self.player_team
 
-        for p in self._get_current_xi(team)():
+        for p in self._get_current_xi(team):
             if p.position == "GK":
                 return p
 
