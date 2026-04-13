@@ -1,5 +1,6 @@
 import random
 from ..actions import assist_attempt, finalization
+from ..events import foul, red, yellow, penalty
 
 # -------------------------
 # 🛡️ GOLEIRO
@@ -43,7 +44,7 @@ def _gk_shot_save(self):
     if random.randint(0, 100) < chance:
         self.ui.show("🧤 DEFESAÇA!")
     else:
-        self.score_opponent += 1
+        self.score_b += 1
         self.ui.show("⚽ Gol adversário...")
 
 
@@ -58,7 +59,7 @@ def _gk_cross(self):
             self.ui.show("✋ Você corta o cruzamento!")
         else:
             self.ui.show("❌ Saiu mal!")
-            self.score_opponent += 1
+            self.score_b += 1
     else:
         self.ui.show("⚠️ Você permanece no gol.")
 
@@ -80,7 +81,7 @@ def _gk_one_on_one(self):
     if random.randint(0, 100) < chance:
         self.ui.show("🧤 DEFENDEU O 1x1!")
     else:
-        self.score_opponent += 1
+        self.score_b += 1
         self.ui.show("⚽ Gol no mano a mano...")
 
 

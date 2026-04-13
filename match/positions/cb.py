@@ -1,5 +1,6 @@
 import random
 from ..actions import assist_attempt, finalization
+from ..events import foul, red, yellow, penalty
 
 
 def handle(match):
@@ -45,7 +46,7 @@ def _cb_marking(self):
         self.ui.show("🛡️ Desarme feito!")
     else:
         if random.random() < foul_risk:
-            self._foul_event()
+            foul(self)
         else:
             self.ui.show("❌ Ele passou!")
 

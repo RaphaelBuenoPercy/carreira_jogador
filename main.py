@@ -19,12 +19,13 @@ def create_player(ui):
 
     # atributos base (simples por enquanto)
     attributes = {
-        "finishing": 70,
-        "passing": 70,
-        "dribbling": 70,
-        "defense": 70,
-        "physical": 70,
-        "pace": 70,
+        "finishing": 90,
+        "passing": 90,
+        "dribbling": 90,
+        "defense": 90,
+        "physical": 90,
+        "pace": 90,
+        "mental": 90,
     }
 
     return {"name": name, "position": position, "attributes": attributes}

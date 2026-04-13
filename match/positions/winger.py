@@ -1,5 +1,6 @@
 import random
 from ..actions import assist_attempt, finalization
+from ..events import foul, red, yellow, penalty
 
 # -------------------------
 # 🔥 PONTA
@@ -47,7 +48,7 @@ def _winger_1v1(self):
 
     else:
         if random.random() < 0.3:
-            self._foul_event()
+            foul(self)
         else:
             self.ui.show("❌ Perdeu a bola.")
 

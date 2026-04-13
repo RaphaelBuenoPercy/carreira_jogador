@@ -1,5 +1,6 @@
 import random
 from ..actions import assist_attempt, finalization
+from ..events import foul, red, yellow, penalty
 
 
 # -------------------------
@@ -64,14 +65,14 @@ def _fb_defense(self):
         self.ui.show("👣 Você segura o jogador.")
         return
     else:
-        self._foul_event()
+        foul(self)
         return
 
     if random.randint(0, 100) < chance:
         self.ui.show("🛡️ Desarme lateral perfeito!")
     else:
         if random.random() < foul_risk:
-            self._foul_event()
+            foul(self)
         else:
             self.ui.show("❌ Ele passou!")
 

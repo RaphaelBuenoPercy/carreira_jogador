@@ -1,3 +1,5 @@
+import random
+
 from data_loader import load_teams_and_players
 
 
@@ -61,6 +63,176 @@ class League:
         )
 
 
+POSITION_TEMPLATES = {
+    "ST": {
+        "finishing": (70, 90),
+        "pace": (65, 85),
+        "dribbling": (60, 80),
+        "passing": (40, 70),
+        "defense": (20, 40),
+    },
+    "CM": {
+        "passing": (65, 90),
+        "dribbling": (60, 80),
+        "defense": (50, 75),
+        "finishing": (50, 70),
+    },
+    "CAM": {
+        "passing": (75, 90),
+        "dribbling": (70, 90),
+        "finishing": (60, 80),
+        "defense": (30, 50),
+    },
+    "CDM": {
+        "defense": (70, 90),
+        "passing": (60, 80),
+        "physical": (65, 85),
+        "finishing": (30, 50),
+    },
+    "CB": {
+        "defense": (75, 95),
+        "physical": (70, 90),
+        "passing": (40, 65),
+        "finishing": (20, 40),
+    },
+    "LB": {"defense": (65, 85), "pace": (70, 90), "passing": (55, 75)},
+    "RB": {"defense": (65, 85), "pace": (70, 90), "passing": (55, 75)},
+    "LW": {"pace": (75, 95), "dribbling": (75, 95), "finishing": (60, 80)},
+    "RW": {"pace": (75, 95), "dribbling": (75, 95), "finishing": (60, 80)},
+    "GK": {"defense": (75, 95), "physical": (60, 80)},
+}
+
+
+def generate_attributes(position):
+    base = {
+        "finishing": 50,
+        "passing": 50,
+        "dribbling": 50,
+        "defense": 50,
+        "physical": 50,
+        "pace": 50,
+        "mental": 50,
+    }
+
+    template = POSITION_TEMPLATES[position]
+
+    for attr, (low, high) in template.items():
+        base[attr] = random.randint(low, high)
+
+    return base
+
+
+FIRST_NAMES = [
+    "Lucas",
+    "Mateus",
+    "Rafael",
+    "João",
+    "Pedro",
+    "Cauã",
+    "Arthur",
+    "Guilherme",
+    "Leonardo",
+    "Felipe",
+    "Gabriel",
+    "Enzo",
+    "Bruno",
+    "Felipe",
+    "Diego",
+    "Emanuel",
+    "Gustavo",
+    "Leonardo",
+    "Thiago",
+    "Vitor",
+    "Samuel",
+    "Murilo",
+    "Davi",
+    "Matheus",
+    "Rodrigo",
+    "Fernando",
+    "Eduardo",
+    "André",
+    "Vinícius",
+    "Caio",
+    "Ramon",
+    "Alexandre",
+    "Enak",
+    "César",
+    "Fábio",
+    "Rômulo",
+    "Gustavo",
+    "Ruan",
+]
+
+LAST_NAMES = [
+    "Silva",
+    "Souza",
+    "Oliveira",
+    "Santos",
+    "Pereira",
+    "Costa",
+    "Rodrigues",
+    "Almeida",
+    "Nascimento",
+    "Lima",
+    "Araújo",
+    "Fernandes",
+    "Carvalho",
+    "Gomes",
+    "Martins",
+    "Rocha",
+    "Dias",
+    "Alves",
+    "Melo",
+    "Ribeiro",
+    "Barbosa",
+    "Teixeira",
+    "Moreira",
+    "Moura",
+    "Cardoso",
+    "Pinto",
+    "Freitas",
+    "Castro",
+    "Campos",
+    "Vasconcelos",
+    "Cavalcanti",
+    "Figueiredo",
+    "Siqueira",
+    "Macedo",
+    "Duarte",
+    "Lopes",
+    "Vieira",
+    "Monteiro",
+    "Cruz",
+    "Gonçalves",
+    "Mendes",
+    "Carneiro",
+    "Viana",
+    "Neves" "Reis",
+    "Borges",
+]
+
+POSITIONS_DISTRIBUTION = [
+    "GK",
+    "CB",
+    "CB",
+    "LB",
+    "RB",
+    "CDM",
+    "CM",
+    "CM",
+    "CAM",
+    "LW",
+    "RW",
+    "ST",
+    "ST",
+    # resto aleatório
+]
+
+
+def generate_name():
+    return f"{random.choice(FIRST_NAMES)} {random.choice(LAST_NAMES)}"
+
+
 def create_league():
     from league import League
     from team import Team
@@ -74,11 +246,12 @@ def create_league():
         players = []
 
         for p_id in range(18):
+            position = random.choice(POSITIONS_DISTRIBUTION)
             player = Player(
                 {
                     "id": t_id * 100 + p_id,
                     "name": f"Player_{t_id}_{p_id}",
-                    "position": random.choice(["ST", "CM", "CB", "LW", "RW"]),
+                    "position": position,
                     "team_id": t_id,
                     "attributes": {
                         "finishing": random.randint(50, 90),

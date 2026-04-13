@@ -22,7 +22,12 @@ def init_stats(player):
         "interceptions": 0,
         "blocks": 0,
         "dribbled_past": 0,
+        "saves": 0,
     }
+
+
+def register_save(match):
+    match.player_stats["saves"] += 1
 
 
 def register_pass(match, success, direction):
