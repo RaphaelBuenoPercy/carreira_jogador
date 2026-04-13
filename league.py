@@ -96,7 +96,11 @@ POSITION_TEMPLATES = {
         "finishing": (20, 40),
     },
     "LB": {"defense": (65, 85), "pace": (70, 90), "passing": (55, 75)},
+    "LWB": {"defense": (60, 80), "pace": (75, 90), "passing": (65, 80)},
     "RB": {"defense": (65, 85), "pace": (70, 90), "passing": (55, 75)},
+    "RWB": {"defense": (60, 80), "pace": (75, 90), "passing": (65, 80)},
+    "LM": {"pace": (70, 90), "dribbling": (75, 95), "passing": (75, 85)},
+    "RM": {"pace": (70, 90), "dribbling": (75, 95), "passing": (75, 85)},
     "LW": {"pace": (75, 95), "dribbling": (75, 95), "finishing": (60, 80)},
     "RW": {"pace": (75, 95), "dribbling": (75, 95), "finishing": (60, 80)},
     "GK": {"defense": (75, 95), "physical": (60, 80)},
@@ -114,7 +118,7 @@ def generate_attributes(position):
         "mental": 50,
     }
 
-    template = POSITION_TEMPLATES[position]
+    template = POSITION_TEMPLATES.get(position, POSITION_TEMPLATES["CM"])
 
     for attr, (low, high) in template.items():
         base[attr] = random.randint(low, high)
@@ -207,26 +211,41 @@ LAST_NAMES = [
     "Mendes",
     "Carneiro",
     "Viana",
-    "Neves" "Reis",
+    "Neves",
+    "Reis",
     "Borges",
 ]
 
-POSITIONS_DISTRIBUTION = [
-    "GK",
-    "CB",
-    "CB",
-    "LB",
-    "RB",
-    "CDM",
-    "CM",
-    "CM",
-    "CAM",
-    "LW",
-    "RW",
-    "ST",
-    "ST",
-    # resto aleatório
-]
+
+def get_variant_position(base_position):
+    variants = {
+        "CB": ["CB"],
+        "LB": ["LB", "LWB"],
+        "RB": ["RB", "RWB"],
+        "CDM": ["CDM", "CM"],
+        "CM": ["CM", "CDM", "CAM"],
+        "CAM": ["CAM", "CM"],
+        "LW": ["LW", "LM"],
+        "RW": ["RW", "RM"],
+        "ST": ["ST"],
+        "GK": ["GK"],
+    }
+
+    return random.choice(variants.get(base_position, [base_position]))
+
+
+SQUAD_TEMPLATE = {
+    "GK": 2,
+    "CB": 4,
+    "LB": 2,
+    "RB": 2,
+    "CDM": 2,
+    "CM": 3,
+    "CAM": 2,
+    "LW": 2,
+    "RW": 2,
+    "ST": 3,
+}
 
 
 def generate_name():
@@ -245,25 +264,20 @@ def create_league():
     for t_id in range(4):
         players = []
 
-        for p_id in range(18):
-            position = random.choice(POSITIONS_DISTRIBUTION)
-            player = Player(
-                {
-                    "id": t_id * 100 + p_id,
-                    "name": f"Player_{t_id}_{p_id}",
-                    "position": position,
-                    "team_id": t_id,
-                    "attributes": {
-                        "finishing": random.randint(50, 90),
-                        "passing": random.randint(50, 90),
-                        "dribbling": random.randint(50, 90),
-                        "defense": random.randint(50, 90),
-                        "physical": random.randint(50, 90),
-                        "pace": random.randint(50, 90),
-                    },
-                }
-            )
-            players.append(player)
+        for base_position, count in SQUAD_TEMPLATE.items():
+            for _ in range(count):
+                position = get_variant_position(base_position)
+                player_id = t_id * 100 + len(players) + 1
+                player = Player(
+                    {
+                        "id": player_id,
+                        "name": generate_name(),
+                        "position": position,
+                        "team_id": t_id,
+                        "attributes": generate_attributes(position),
+                    }
+                )
+                players.append(player)
 
         team = Team(
             data={"id": t_id, "name": f"Time {t_id}", "league_id": 1}, players=players

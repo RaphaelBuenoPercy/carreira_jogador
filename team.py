@@ -70,9 +70,83 @@ class Team:
         return xi
 
     def get_bench(self):
-        return sorted(self.players, key=lambda p: p.get_match_rating(), reverse=True)[
-            11:18
-        ]
+        xi = self.get_starting_xi()
+        xi_ids = {p.id for p in xi}
+
+        bench_candidates = [p for p in self.players if p.id not in xi_ids]
+        bench = []
+
+        def pick_best(filter_fn):
+            candidates = [p for p in bench_candidates if filter_fn(p)]
+            if not candidates:
+                return None
+            best = max(candidates, key=lambda p: p.get_match_rating())
+            bench_candidates.remove(best)
+            return best
+
+        def pick_best_with_fallback(filter_fn):
+            player = pick_best(filter_fn)
+            if player:
+                return player
+
+            if bench_candidates:
+                best = max(bench_candidates, key=lambda p: p.get_match_rating())
+                bench_candidates.remove(best)
+                return best
+
+            return None
+
+        # -------------------
+        # 1. GK (obrigatório)
+        # -------------------
+        gk = pick_best(lambda p: p.position == "GK")
+        if gk:
+            bench.append(gk)
+
+        # -------------------
+        # 2. DEFESA (2)
+        # -------------------
+        for _ in range(2):
+            player = pick_best_with_fallback(
+                lambda p: p.position in ["CB", "LB", "RB", "LWB", "RWB"]
+            )
+            if player:
+                bench.append(player)
+
+        # -------------------
+        # 3. MEIO (3)
+        # -------------------
+        for _ in range(3):
+            player = pick_best_with_fallback(
+                lambda p: p.position in ["CDM", "CM", "CAM", "LM", "RM"]
+            )
+            if player:
+                bench.append(player)
+
+        # -------------------
+        # 4. ATAQUE (2)
+        # -------------------
+        for _ in range(2):
+            player = pick_best_with_fallback(lambda p: p.position in ["ST", "LW", "RW"])
+            if player:
+                bench.append(player)
+
+        # -------------------
+        # 5. COMPLETAR ATÉ 12
+        # -------------------
+        remaining = sorted(
+            bench_candidates, key=lambda p: p.get_match_rating(), reverse=True
+        )
+
+        for p in remaining:
+            if len(bench) >= 12:
+                break
+            bench.append(p)
+
+        return bench[:12]
+
+    def _get_current_xi(self, team):
+        return self.lineups[team.id]["xi"]
 
     def get_team_strength(self):
         xi = self.get_starting_xi()

@@ -27,8 +27,9 @@ class Player:
 
     def get_match_rating(self):
         base = self.get_rating()
+        fatigue_penalty = (100 - self.fitness) * 0.05
 
-        modifier = (self.form * 0.2 + self.morale * 0.1 + self.fitness * 0.1) / 10
+        modifier = (self.form * 0.2 + self.morale * 0.1 + fatigue_penalty * 0.08) / 10
 
         return base + modifier
 
